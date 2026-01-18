@@ -145,8 +145,21 @@ void ListenerManager::createListeners(
                 std::copy(listener.sslConfCmds_.begin(),
                           listener.sslConfCmds_.end(),
                           std::back_inserter(cmds));
+                // Extract ClientCAFile from cmds to avoid crash in OpenSSL 3.0.13
+                std::string caFile;
+                auto it = std::find_if(cmds.begin(), cmds.end(),
+                    [](const std::pair<std::string, std::string>& p) {
+                        return p.first == "ClientCAFile";
+                    });
+                if (it != cmds.end()) {
+                    caFile = it->second;
+                    cmds.erase(it);
+                }
                 auto policy =
                     trantor::TLSPolicy::defaultServerPolicy(cert, key);
+                if (!caFile.empty()) {
+                    policy->setCaPath(caFile);
+                }
                 policy->setConfCmds(cmds).setUseOldTLS(listener.useOldTLS_);
                 serverPtr->enableSSL(std::move(policy));
             }
@@ -184,8 +197,21 @@ void ListenerManager::createListeners(
                     exit(1);
                 }
                 auto cmds = sslConfCmds;
+                // Extract ClientCAFile from cmds to avoid crash in OpenSSL 3.0.13
+                std::string caFile;
+                auto it = std::find_if(cmds.begin(), cmds.end(),
+                    [](const std::pair<std::string, std::string>& p) {
+                        return p.first == "ClientCAFile";
+                    });
+                if (it != cmds.end()) {
+                    caFile = it->second;
+                    cmds.erase(it);
+                }
                 auto policy =
                     trantor::TLSPolicy::defaultServerPolicy(cert, key);
+                if (!caFile.empty()) {
+                    policy->setCaPath(caFile);
+                }
                 policy->setConfCmds(cmds).setUseOldTLS(listener.useOldTLS_);
                 serverPtr->enableSSL(std::move(policy));
             }
