@@ -578,8 +578,7 @@ void HttpServer::requestPreHandling(const HttpRequestImplPtr &req, Pack &&pack)
 {
     // Handle CORS preflight request, except when custom handling is desired
     if ((req->method() == Options) &&
-        (!req->attributes()->find("customCORShandling") ||
-        !req->attributes()->get<bool>("customCORShandling")))
+        !req->attributes()->get<bool>("customCORShandling"))
     {
         handleHttpOptions(req,
                           *pack.binderPtr->corsMethods_,
