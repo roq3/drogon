@@ -161,7 +161,7 @@ class HttpCoroMiddleware : public DrObject<T>, public HttpMiddlewareBase
  * 1. globally via
  *   app().registerMiddleware(std::make_shared<drogon::HttpOptionsMiddleware>())
  * 2. on every path handlers that need non-default handling, with
- *    ADD_METHOD_TO(... , "drogon::HttpOptionsMiddleware")
+ *    ADD_METHOD_TO(..., drogon::Options, "drogon::HttpOptionsMiddleware")
  */
 template <class Derived, bool AutoCreation = true>
 class HttpOptionsMiddlewareImpl
