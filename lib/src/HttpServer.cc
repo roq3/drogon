@@ -579,7 +579,7 @@ void HttpServer::requestPreHandling(const HttpRequestImplPtr &req, Pack &&pack)
     // Handle CORS preflight request, except when custom handling is desired
     if ((req->method() == Options))
     {
-        if (req->attributes()->get<bool>("drogon.customCORShandling"))
+        if (!req->attributes()->get<bool>("drogon.customCORShandling"))
         {
             handleHttpOptions(req,
                               *pack.binderPtr->corsMethods_,
