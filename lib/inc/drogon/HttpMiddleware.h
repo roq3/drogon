@@ -150,8 +150,8 @@ class HttpCoroMiddleware : public DrObject<T>, public HttpMiddlewareBase
 
 /**
  * @brief Simple middleware that tags OPTIONS requests
- * @details It adds the attribute "customCORShandling" to the request, so that
- * HttpServer does not handle CORS for them internally.
+ * @details It adds the attribute "drogon.customCORShandling" to the request, so
+ * that HttpServer does not handle CORS for them internally.
  *
  * This allows custom CORS handling via the path handlers.
  * For example to restrict the origins, headers allowed, specify a max age to
@@ -173,7 +173,7 @@ class HttpOptionsMiddlewareImpl
                 MiddlewareCallback &&mcb) override
     {
         // Tag OPTIONS
-        if (req && req->method() == drogon::HttpMethod::Options)
+        if (req->method() == drogon::HttpMethod::Options)
             req->attributes()->insert("drogon.customCORShandling", true);
         // continue with next middleware (no post-processing here)
         nextCb(std::move(mcb));
